@@ -1,0 +1,21 @@
+[
+  {"year": 2007, "game": "Super Mario Galaxy", "game_cover": "https://cdn.mobygames.com/covers/8944974-super-mario-galaxy-wii-front-cover.jpg"},
+  {"year": 2008, "game": "Fallout 3", "game_cover": "https://art.gametdb.com/ps3/coverHQ/US/BLUS30185.jpg"},
+  {"year": 2009, "game": "Uncharted 2: Among Thieves", "game_cover": "https://art.gametdb.com/ps3/coverHQ/US/BCUS98123.jpg"},
+  {"year": 2010, "game": "Mass Effect 2", "game_cover": "https://art.gametdb.com/ps3/coverHQ2/EN/BLES01133.jpg"},
+  {"year": 2011, "game": "Portal 2", "game_cover": "https://cdn.mobygames.com/covers/6636214-portal-2-playstation-3-front-cover.jpg"},
+  {"year": 2012, "game": "Journey", "game_cover": "https://art.gametdb.com/ps3/coverHQ/US/BCUS98377.jpg"},
+  {"year": 2013, "game": "The Last of Us", "game_cover": "https://cdn.mobygames.com/covers/6777884-the-last-of-us-playstation-3-front-cover.jpg"},
+  {"year": 2014, "game": "Dragon Age: Inquisition", "game_cover": "https://art.gametdb.com/ps3/coverHQ/US/BLUS31515.jpg"},
+  {"year": 2015, "game": "The Witcher 3: Wild Hunt", "game_cover": "https://art.gametdb.com/switch/coverHQ/EN/AURVC.jpg"},
+  {"year": 2016, "game": "Overwatch", "game_cover": "https://cdn.mobygames.com/covers/847314-overwatch-windows-front-cover.jpg"},
+  {"year": 2017, "game": "The Legend of Zelda: Breath of the Wild", "game_cover": "https://cdn.mobygames.com/covers/2122878-the-legend-of-zelda-breath-of-the-wild-wii-u-front-cover.png"},
+  {"year": 2018, "game": "God of War", "game_cover": "https://cdn.mobygames.com/covers/10147644-god-of-war-playstation-4-front-cover.jpg"},
+  {"year": 2019, "game": "Control", "game_cover": "https://cdn.mobygames.com/covers/847810-control-windows-front-cover.jpg"},
+  {"year": 2020, "game": "Hades", "game_cover": "https://cdn.mobygames.com/covers/916216-hades-nintendo-switch-front-cover.jpg"},
+  {"year": 2021, "game": "Forza Horizon 5", "game_cover": "https://cdn.mobygames.com/covers/10973763-forza-horizon-5-xbox-series-x-front-cover.jpg"},
+  {"year": 2022, "game": "Elden Ring", "game_cover": "https://cdn.mobygames.com/covers/11661233-elden-ring-playstation-4-front-cover.jpg"},
+  {"year": 2023, "game": "The Legend of Zelda: Tears of the Kingdom", "game_cover": "https://cdn.mobygames.com/covers/12099369-the-legend-of-zelda-tears-of-the-kingdom-switch-front-cover.jpg"},
+  {"year": 2024, "game": "Metaphor: ReFantazio", "game_cover": "https://cdn.mobygames.com/covers/12500000-metaphor-refantazio-playstation-5-front-cover.jpg"},
+  {"year": 2025, "game": "TBD", "game_cover": ""}
+]

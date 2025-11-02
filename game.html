@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>18th Birthday Game Card 🎮</title>
+<style>
+  html, body {
+    margin: 0;
+    background: #111;
+    color: #fff;
+    font-family: 'Press Start 2P', monospace;
+    height: 100%;
+    overflow: hidden;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  #gameCanvas {
+    display: block;
+    margin: 0 auto;
+    background: #1a1a1a;
+    border: 3px solid #0ff;
+    image-rendering: pixelated;
+  }
+
+  #msg {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: #0ff;
+  }
+
+  #overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    color: #0ff;
+    font-size: 20px;
+    text-align: center;
+    padding-top: 20%;
+  }
+</style>
+</head>
+<body>
+<div id="msg">🎁 Collect all 18 gifts! Use arrow keys 🎂</div>
+<canvas id="gameCanvas" width="640" height="400"></canvas>
+<div id="overlay">LEVEL UP<br>ADULT MODE UNLOCKED 🎉</div>
+
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const tile = 20;
+const cols = canvas.width / tile;
+const rows = canvas.height / tile;
+
+let player = { x: 5, y: 5 };
+let gifts = [];
+let collected = 0;
+const totalGifts = 18;
+
+function randomPos() {
+  return {
+    x: Math.floor(Math.random() * cols),
+    y: Math.floor(Math.random() * rows)
+  };
+}
+
+// Place gifts randomly
+for (let i = 0; i < totalGifts; i++) {
+  gifts.push(randomPos());
+}
+
+function drawPixel(x, y, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x * tile, y * tile, tile, tile);
+}
+
+function draw() {
+  ctx.fillStyle = "#111";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw player
+  drawPixel(player.x, player.y, "#0f0");
+
+  // Draw gifts
+  gifts.forEach(g => drawPixel(g.x, g.y, "#ff0"));
+
+  // Display score
+  ctx.fillStyle = "#0ff";
+  ctx.font = "10px 'Press Start 2P'";
+  ctx.fillText(`Gifts: ${collected}/${totalGifts}`, 10, 15);
+}
+
+function update() {
+  // Check collisions
+  for (let i = gifts.length - 1; i >= 0; i--) {
+    if (gifts[i].x === player.x && gifts[i].y === player.y) {
+      gifts.splice(i, 1);
+      collected++;
+      if (collected === totalGifts) {
+        document.getElementById("overlay").style.display = "block";
+      }
+    }
+  }
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowUp" && player.y > 0) player.y--;
+  if (e.key === "ArrowDown" && player.y < rows - 1) player.y++;
+  if (e.key === "ArrowLeft" && player.x > 0) player.x--;
+  if (e.key === "ArrowRight" && player.x < cols - 1) player.x++;
+  update();
+  draw();
+});
+
+draw();
+</script>
+</body>
+</html>

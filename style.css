@@ -1,0 +1,47 @@
+body {
+  background-color: #001a00;
+  color: #00ff00;
+  font-family: 'Press Start 2P', monospace;
+  text-align: center;
+}
+header {
+  padding: 2rem 0;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #00ff00;
+}
+.memory-card {
+  border: 2px solid #00ff00;
+  padding: 1rem;
+  margin: 0.5rem;
+  min-height: 250px;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #00ff00;
+}
+.controls button {
+  margin: 1rem;
+  background: none;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  padding: 0.5rem 1rem;
+  font-family: 'Press Start 2P', monospace;
+}
+.controls button:hover {
+  background: #00ff00;
+  color: #001a00;
+}
+
+#timeline {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0.5rem;
+}
+#timeline img {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated; /* keeps the 8-bit look */
+}

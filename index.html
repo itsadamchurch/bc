@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Level Up Memories</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <header>🎂 Character Leveling Up 🎮</header>
+
+  <!-- Slideshow controls -->
+  <div class="controls">
+    <button onclick="prevSlide()">⬅ Prev</button>
+    <button onclick="nextSlide()">Next ➡</button>
+  </div>
+
+  <!-- Top row: Level info -->
+  <div class="row mt-4">
+    <div class="col-12 memory-card" id="level-info">
+      <div class="row mt-4">
+ 
+</div>
+ <div class="col-12 memory-card" id="timeline"></div>
+
+    </div>
+  </div>
+
+  <!-- Bottom row: GOTY + personal image -->
+  <div class="row mt-4">
+    <div class="col-4 memory-card" id="goty-col"></div>
+    <div class="col-3 memory-card" id="image-col">
+      <img id="level-img-8bit" src="" alt="Level image">
+    </div>
+    <div class="col-4 memory-card" id="image-col">
+      <img id="level-img" src="" alt="Level image">
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
