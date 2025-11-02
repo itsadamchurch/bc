@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let animId = null;
   let running = false;
 
-  // === Add loading overlay dynamically ===
+  // === Loading overlay ===
   const loader = document.createElement("div");
   loader.id = "loader";
   loader.innerHTML = `
@@ -46,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.body.appendChild(loader);
 
-  // === Loader CSS (inline for simplicity) ===
   const style = document.createElement("style");
   style.textContent = `
     #loader {
@@ -77,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.head.appendChild(style);
 
-  // === Confetti setup ===
+  // === Confetti ===
   function resize() {
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -119,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     draw();
 
+    // Stop after 3 seconds, clear, then show bonus
     setTimeout(() => {
       running = false;
       if (animId) cancelAnimationFrame(animId);
@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // === Show Slide ===
+  // === Show slide ===
   function showSlide(index) {
     const data = levels[index];
     if (!data) return;
@@ -180,23 +180,24 @@ document.addEventListener("DOMContentLoaded", () => {
       <p>${data.year} – ${data.game}</p>
     `;
 
-    // Start loader while images load
     loader.classList.remove("hidden");
 
     loadBothImages(index, () => {
-      // Fade out loader when both ready
-      setTimeout(() => loader.classList.add("hidden"), 400);
-    });
+      // Wait a moment before fade-out
+      setTimeout(() => {
+        loader.classList.add("hidden");
 
-    if (index === 18) {
-      bonus.classList.remove("visible");
-      shootConfetti();
-    } else {
-      bonus.classList.remove("visible");
-      running = false;
-      if (animId) cancelAnimationFrame(animId);
-      if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+        if (index === 18) {
+          bonus.classList.remove("visible");
+          shootConfetti(); // 🎉 works exactly the same as others now
+        } else {
+          bonus.classList.remove("visible");
+          running = false;
+          if (animId) cancelAnimationFrame(animId);
+          if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }, 400);
+    });
   }
 
   // === Navigation ===
@@ -210,6 +211,5 @@ document.addEventListener("DOMContentLoaded", () => {
     showSlide(currentSlide);
   });
 
-  // === Initial Load ===
   showSlide(currentSlide);
 });
