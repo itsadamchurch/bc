@@ -35,6 +35,49 @@ document.addEventListener("DOMContentLoaded", () => {
   let animId = null;
   let running = false;
 
+  // === Add loading overlay dynamically ===
+  const loader = document.createElement("div");
+  loader.id = "loader";
+  loader.innerHTML = `
+    <div class="loader-content">
+      <div class="loader-icon">🕹️</div>
+      <p>Loading next level...</p>
+    </div>
+  `;
+  document.body.appendChild(loader);
+
+  // === Loader CSS (inline for simplicity) ===
+  const style = document.createElement("style");
+  style.textContent = `
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      color: #00ff00;
+      font-family: 'Press Start 2P', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 99999;
+      transition: opacity 1s ease;
+    }
+    #loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .loader-icon {
+      font-size: 3rem;
+      animation: pulse 1s infinite alternate;
+    }
+    @keyframes pulse {
+      from { transform: scale(1); opacity: 0.6; }
+      to { transform: scale(1.2); opacity: 1; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // === Confetti setup ===
   function resize() {
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -43,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", resize);
   resize();
 
-  // === Confetti ===
   function shootConfetti(count = 220) {
     if (!ctx || !canvas) return;
     running = true;
@@ -77,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     draw();
 
-    // Stop after 3 seconds
     setTimeout(() => {
       running = false;
       if (animId) cancelAnimationFrame(animId);
@@ -86,8 +127,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3000);
   }
 
-  // === Synced Image Loader ===
-  function loadBothImages(index) {
+  // === Synced image loader ===
+  function loadBothImages(index, callback) {
     const data = levels[index];
     if (!data) return;
 
@@ -117,7 +158,8 @@ document.addEventListener("DOMContentLoaded", () => {
         loadedSrcs[i] = src;
         count++;
         if (count === total) {
-          paths.forEach(({ el }, j) => el.src = loadedSrcs[j]);
+          paths.forEach(({ el }, j) => (el.src = loadedSrcs[j]));
+          if (callback) callback();
         }
       });
     });
@@ -138,7 +180,13 @@ document.addEventListener("DOMContentLoaded", () => {
       <p>${data.year} – ${data.game}</p>
     `;
 
-    loadBothImages(index);
+    // Start loader while images load
+    loader.classList.remove("hidden");
+
+    loadBothImages(index, () => {
+      // Fade out loader when both ready
+      setTimeout(() => loader.classList.add("hidden"), 400);
+    });
 
     if (index === 18) {
       bonus.classList.remove("visible");
@@ -162,5 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
     showSlide(currentSlide);
   });
 
+  // === Initial Load ===
   showSlide(currentSlide);
 });
