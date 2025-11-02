@@ -1,46 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Level Up Memories</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Do Not Push</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, #111 0%, #000 100%);
+      overflow: hidden;
+      font-family: 'Press Start 2P', monospace;
+      color: #ff4444;
+    }
+
+    .button-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    #big-button {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: none;
+      background: radial-gradient(circle at 30% 30%, #ff5555, #a80000 70%);
+      box-shadow:
+        inset -8px -8px 15px rgba(0,0,0,0.5),
+        0 10px 0 #550000,
+        0 15px 20px rgba(0,0,0,0.6);
+      color: white;
+      font-size: 0.8rem;
+      text-shadow: 0 2px 2px rgba(0,0,0,0.8);
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      position: relative;
+      z-index: 10;
+    }
+
+    #big-button:active {
+      transform: translateY(5px);
+      box-shadow:
+        inset -4px -4px 10px rgba(0,0,0,0.5),
+        0 5px 0 #550000,
+        0 8px 15px rgba(0,0,0,0.5);
+    }
+
+    #button-text {
+      position: absolute;
+      top: 45%;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      font-size: 0.8rem;
+      pointer-events: none;
+    }
+
+    #warning {
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: #ff0000;
+      text-shadow: 0 0 6px #ff0000;
+    }
+
+    #confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
-  <header>🎂 Character Leveling Up 🎮</header>
-
-  <!-- Slideshow controls -->
-  <div class="controls">
-    <button onclick="prevSlide()">⬅ Prev</button>
-    <button onclick="nextSlide()">Next ➡</button>
+  <div class="button-wrapper">
+    <button id="big-button">
+      <div id="button-text">HAPPY<br>BIRTHDAY</div>
+    </button>
+    <div id="warning">Push if you dare...</div>
   </div>
 
-  <!-- Top row: Level info -->
-  <div class="row mt-4">
-    <div class="col-12 memory-card" id="level-info">
-      <div class="row mt-4">
- 
-</div>
- <div class="col-12 memory-card" id="timeline"></div>
+  <canvas id="confetti"></canvas>
 
-    </div>
-  </div>
+  <script>
+    const button = document.getElementById("big-button");
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let pieces = [];
 
-  <!-- Bottom row: GOTY + personal image -->
-  <div class="row mt-4">
-    <div class="col-4 memory-card" id="goty-col"></div>
-    <div class="col-3 memory-card" id="image-col">
-      <img id="level-img-8bit" src="" alt="Level image">
-    </div>
-    <div class="col-4 memory-card" id="image-col">
-      <img id="level-img" src="" alt="Level image">
-    </div>
-  </div>
-</div>
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
 
-<script src="script.js"></script>
+    function launchConfetti(count = 250) {
+      pieces = [];
+      for (let i = 0; i < count; i++) {
+        pieces.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          size: 6 + Math.random() * 6,
+          color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+          vx: Math.random() * 6 - 3,
+          vy: Math.random() * 5 + 2,
+          g: 0.25 + Math.random() * 0.15,
+        });
+      }
+
+      let running = true;
+      function update() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach((p) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += p.g;
+          if (p.y > canvas.height) p.y = -10;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+        });
+        if (running) requestAnimationFrame(update);
+      }
+      update();
+
+      setTimeout(() => {
+        running = false;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        window.location.href = "level.html";
+      }, 2500);
+    }
+
+    button.addEventListener("click", () => {
+      button.disabled = true;
+      document.getElementById("warning").textContent = "Oh no... what have you done?";
+      launchConfetti();
+    });
+  </script>
 </body>
 </html>

@@ -1,4 +1,5 @@
-let currentSlide = 0;
+document.addEventListener("DOMContentLoaded", () => {
+  let currentSlide = 0;
 
 const levels = [
   { year: 2007, level: 0, game: "Super Mario Galaxy", game_cover: "https://cdn.mobygames.com/covers/8944974-super-mario-galaxy-wii-front-cover.jpg", desc: "The adventure begins — a star is born, ready to explore whole new galaxies." },
@@ -22,76 +23,76 @@ const levels = [
   { year: 2025, level: 18, game: "TBD", game_cover: "", desc: "Adulthood unlocked — the next quest is yours to write." }
 ];
 
-const levelInfo = document.getElementById('level-info');
-const gotyCol = document.getElementById('goty-col');
-const levelImg = document.getElementById('level-img');
-const levelImg8bit = document.getElementById('level-img-8bit');
-const timeline = document.getElementById('timeline');
+  const levelInfo = document.getElementById('level-info');
+  const gotyCol = document.getElementById('goty-col');
+  const levelImg = document.getElementById('level-img');
+  const levelImg8bit = document.getElementById('level-img-8bit');
+  const timeline = document.getElementById('timeline');
 
-function renderTimeline(current) {
-  timeline.innerHTML = "";
-  for (let i = 0; i < levels.length; i++) {
-    const icon = document.createElement("img");
-    icon.src = i <= current ? "img/icon_on.png" : "img/icon_off.png";
-    icon.alt = `Level ${i}`;
-    icon.style.width = "24px";
-    icon.style.height = "24px";
-    icon.style.imageRendering = "pixelated";
-    timeline.appendChild(icon);
+  function renderTimeline(current) {
+    timeline.innerHTML = "";
+    for (let i = 0; i < levels.length; i++) {
+      const icon = document.createElement("img");
+      icon.src = i <= current ? "img/icon_on.png" : "img/icon_off.png";
+      icon.alt = `Level ${i}`;
+      icon.style.width = "24px";
+      icon.style.height = "24px";
+      icon.style.imageRendering = "pixelated";
+      timeline.appendChild(icon);
+    }
   }
-}
 
-function showSlide(index) {
-  const data = levels[index];
+  function showSlide(index) {
+    const data = levels[index];
+    if (!data || !levelInfo) return;
 
-  // Top row: Level info
-  levelInfo.innerHTML = `
-    <h3>Level ${data.level} – ${data.year}</h3>
-    <p>${data.desc}</p>
-  `;
+    levelInfo.innerHTML = `
+      <h3>Level ${data.level} – ${data.year}</h3>
+      <p>${data.desc}</p>
+    `;
 
-  // Left column: GOTY
-  gotyCol.innerHTML = `
-    <h4>Game of the Year</h4>
-    ${data.game_cover ? `<img src="${data.game_cover}" alt="${data.game}" style="max-width:100%; margin-bottom:0.5rem;">` : ""}
-    <p>${data.year} – ${data.game}</p>
-  `;
+    gotyCol.innerHTML = `
+      <h4>Game of the Year</h4>
+      ${data.game_cover ? `<img src="${data.game_cover}" alt="${data.game}" style="max-width:100%; margin-bottom:0.5rem;">` : ""}
+      <p>${data.year} – ${data.game}</p>
+    `;
 
-  // Middle 8-bit column – try .jpg first, then .png
-  const base = `img/imgOg/${data.level}`;
-  const base8bit = `img/${data.level}`;
+    const base = `img/imgOg/${data.level}`;
+    const base8bit = `img/${data.level}`;
 
-  levelImg8bit.onerror = () => {
-    if (!levelImg8bit.src.endsWith(".png")) {
-      levelImg8bit.src = `${base8bit}.png`;
-    }
-  };
-  levelImg8bit.src = `${base8bit}.jpg`;
-  levelImg8bit.alt = `Level ${data.level} image`;
+    levelImg8bit.onerror = () => {
+      if (!levelImg8bit.src.endsWith(".png")) {
+        levelImg8bit.src = `${base8bit}.png`;
+      }
+    };
+    levelImg8bit.src = `${base8bit}.jpg`;
+    levelImg8bit.alt = `Level ${data.level} image`;
 
-  // Right column – same fallback logic
-  levelImg.onerror = () => {
-    if (!levelImg.src.endsWith(".png")) {
-      levelImg.src = `${base}.png`;
-    }
-  };
-  levelImg.src = `${base}.jpg`;
-  levelImg.alt = `Level ${data.level} image`;
+    levelImg.onerror = () => {
+      if (!levelImg.src.endsWith(".png")) {
+        levelImg.src = `${base}.png`;
+      }
+    };
+    levelImg.src = `${base}.jpg`;
+    levelImg.alt = `Level ${data.level} image`;
 
-  // Timeline
-  renderTimeline(index);
-}
+    renderTimeline(index);
+  }
 
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % levels.length;
+    showSlide(currentSlide);
+  }
 
-function nextSlide() {
-  currentSlide = (currentSlide + 1) % levels.length;
+  function prevSlide() {
+    currentSlide = (currentSlide - 1 + levels.length) % levels.length;
+    showSlide(currentSlide);
+  }
+
+  // Hook up buttons safely
+  document.getElementById("nextBtn").addEventListener("click", nextSlide);
+  document.getElementById("prevBtn").addEventListener("click", prevSlide);
+
+  // Initialize after DOM is ready
   showSlide(currentSlide);
-}
-
-function prevSlide() {
-  currentSlide = (currentSlide - 1 + levels.length) % levels.length;
-  showSlide(currentSlide);
-}
-
-// Initialize
-showSlide(currentSlide);
+});
