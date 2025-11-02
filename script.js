@@ -28,22 +28,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const levelImg = document.getElementById("level-img");
   const levelImg8bit = document.getElementById("level-img-8bit");
   const bonus = document.getElementById("bonus");
-
-  // === Confetti Setup ===
   const canvas = document.getElementById("confetti");
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas ? canvas.getContext("2d") : null;
+
   let pieces = [];
   let animId = null;
   let running = false;
 
   function resize() {
+    if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
   window.addEventListener("resize", resize);
   resize();
 
+  // === Confetti ===
   function shootConfetti(count = 220) {
+    if (!ctx || !canvas) return;
     running = true;
     pieces = [];
 
@@ -60,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function draw() {
-      if (!running) return;
+      if (!running || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       pieces.forEach((p) => {
         p.x += p.vx;
@@ -75,26 +77,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
     draw();
 
-    // Stop after 3 seconds, clear, then reveal bonus
+    // Stop after 3 seconds
     setTimeout(() => {
       running = false;
       if (animId) cancelAnimationFrame(animId);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
       setTimeout(() => bonus.classList.add("visible"), 200);
     }, 3000);
   }
 
-  // === Image Loader with .jpg/.JPG/.png fallback ===
-  function loadImage(imgEl, basePath) {
-    const candidates = [`${basePath}.jpg`, `${basePath}.JPG`, `${basePath}.png`];
-    function tryNext(i) {
-      if (i >= candidates.length) return;
-      const test = new Image();
-      test.onload = () => (imgEl.src = candidates[i]);
-      test.onerror = () => tryNext(i + 1);
-      test.src = candidates[i];
+  // === Synced Image Loader ===
+  function loadBothImages(index) {
+    const data = levels[index];
+    if (!data) return;
+
+    const paths = [
+      { el: levelImg8bit, base: `img/${data.level}` },
+      { el: levelImg, base: `img/imgOg/${data.level}` },
+    ];
+
+    function getFirstValidSrc(base, cb) {
+      const candidates = [`${base}.jpg`, `${base}.JPG`, `${base}.png`];
+      let loaded = false;
+      (function tryNext(i) {
+        if (i >= candidates.length || loaded) return;
+        const test = new Image();
+        test.onload = () => { loaded = true; cb(candidates[i]); };
+        test.onerror = () => tryNext(i + 1);
+        test.src = candidates[i];
+      })(0);
     }
-    tryNext(0);
+
+    let count = 0;
+    const total = paths.length;
+    const loadedSrcs = {};
+
+    paths.forEach(({ el, base }, i) => {
+      getFirstValidSrc(base, (src) => {
+        loadedSrcs[i] = src;
+        count++;
+        if (count === total) {
+          paths.forEach(({ el }, j) => el.src = loadedSrcs[j]);
+        }
+      });
+    });
   }
 
   // === Show Slide ===
@@ -112,8 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <p>${data.year} – ${data.game}</p>
     `;
 
-    loadImage(levelImg, `img/imgOg/${data.level}`);
-    loadImage(levelImg8bit, `img/${data.level}`);
+    loadBothImages(index);
 
     if (index === 18) {
       bonus.classList.remove("visible");
@@ -122,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
       bonus.classList.remove("visible");
       running = false;
       if (animId) cancelAnimationFrame(animId);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
   }
 
